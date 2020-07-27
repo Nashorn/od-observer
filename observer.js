@@ -19,7 +19,7 @@ Observer.prototype = {
     dispatchEvent : function(eventName, data, scope) {
         scope = (scope||this||window);
         var funcs = this.subscribers[eventName]||[];
-   	        funcs.forEach(function notify_observer(observer) { 
+            funcs.forEach(function notify_observer(observer) { 
                 observer.func.call(scope, data); 
             });  
     },
@@ -31,3 +31,4 @@ Observer.prototype = {
             });
     }
 };
+window.Observer=Observer;
