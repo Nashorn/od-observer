@@ -10,25 +10,19 @@ var Observation = function(name, func) {
 };
  
 Observer.prototype = {
-    addEventListener : function(eventName, callback, capture){
-        if (!this.subscribers[eventName]) {
-            this.subscribers[eventName] = [];}
-        this.subscribers[eventName].push(new Observation(eventName, callback));
+    addEventListener : function(name, func, capture){
+        this.subscribers[name] = this.subscribers[name]||[];
+        this.subscribers[name].push({name, func});
     },
     
-    dispatchEvent : function(eventName, data, scope) {
-        scope = (scope||this||window);
-        var funcs = this.subscribers[eventName]||[];
-            funcs.forEach(function notify_observer(observer) { 
-                observer.func.call(scope, data); 
-            });  
+    dispatchEvent : function(name, data, scope=this||window) {
+        var cbs = this.subscribers[name]||[];
+            cbs.forEach(cb => cb.func.call(scope, data));  
     },
     
-    removeEventListener : function(eventName, callback){
-        var subscribers = this.subscribers[eventName]||[];
-            subscribers.remove(function(i) {
-                return i.name === eventName && i.func === callback;
-            });
+    removeEventListener : function(name, cb){
+        var subs = this.subscribers[name]||[];
+            subs.remove(i => i.name === name && i.func === cb);
     }
 };
 window.Observer=Observer;
