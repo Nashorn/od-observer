@@ -10,9 +10,10 @@ var Observation = function(name, func) {
 };
  
 Observer.prototype = {
-    addEventListener : function(name, func, capture){
-        this.subscribers[name] = this.subscribers[name]||[];
-        this.subscribers[name].push({name, func});
+    addEventListener : function(name, cb, capture){
+        if (!this.subscribers[name]) {
+            this.subscribers[name] = [];}
+        this.subscribers[name].push(new Observation(name, cb));
     },
     
     dispatchEvent : function(name, data, scope=this||window) {
